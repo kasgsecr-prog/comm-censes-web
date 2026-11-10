@@ -2,12 +2,23 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>comm-censes-web</title>
+    <!-- viewport-fit=cover + env(safe-area-inset-*) in CSS handles iPhone notch. Do NOT disable zoom. -->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="referrer" content="no-referrer" />
+    <meta name="theme-color" content="#1c4ed8" />
+    <link rel="icon" href="data:," />
+    <title>KA Community Census</title>
   </head>
   <body>
     <div id="root"></div>
+    <noscript
+      >This census form needs JavaScript. Please enable it and reload the
+      page.</noscript
+    >
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
