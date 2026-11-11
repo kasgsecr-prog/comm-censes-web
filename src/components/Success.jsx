@@ -11,15 +11,15 @@ export default function Success({ reference }) {
         required regarding your submission.
       </p>
       <p>
-        We also strongly encourage you to share this KA Community Census with
-        other KNR families living in Singapore so that we can maintain a
+        We also strongly encourage you to share this KA Community Census request
+        with other KNR families living in Singapore so that we can maintain a
         comprehensive and up-to-date community database.
       </p>
       <p>
         Your participation and support are greatly appreciated as we work
         together to strengthen our community connections.
       </p>
-      <StepHeading>Thank you for your cooperation and support</StepHeading>
+      <legend>Thank you for your cooperation and support</legend>
       <p>KA Community Census Team</p>
     </div>
   );
