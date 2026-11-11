@@ -119,6 +119,9 @@ export default function ReviewStep({ onEdit }) {
               <Row k="Name" v={c.fullName} />
               <Row k="Year of birth" v={c.yearOfBirth} />
               <Row k="Gender" v={cap(c.gender)} />
+              {c.maritalStatus ? (
+                <Row k="Marital status" v={cap(c.maritalStatus)} />
+              ) : null}
               {c.mobile ? <Row k="Mobile" v={c.mobile} /> : null}
               {c.email ? <Row k="Email" v={c.email} /> : null}
             </Section>

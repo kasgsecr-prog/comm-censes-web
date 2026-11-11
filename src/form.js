@@ -24,6 +24,7 @@ export const emptyChild = {
   fullName: "",
   yearOfBirth: "",
   gender: "",
+  maritalStatus: "",
   mobile: "",
   email: "",
 };
@@ -75,6 +76,11 @@ export function extraErrors(step, v) {
   if (step === "children") {
     v.children.forEach((c, i) => {
       if (!isAdultYear(c.yearOfBirth)) return;
+      if (blank(c.maritalStatus))
+        out.push({
+          name: `children.${i}.maritalStatus`,
+          message: "Marital status is required for children aged 18 or over",
+        });
       if (blank(c.mobile))
         out.push({
           name: `children.${i}.mobile`,
@@ -131,8 +137,13 @@ export function buildPayload(v, clientToken) {
     payload.children = v.children.slice(0, n).map((c) => {
       const base = pick(c, ["fullName", "yearOfBirth", "gender"]);
       return isAdultYear(c.yearOfBirth)
-        ? { ...base, mobile: c.mobile, email: c.email }
-        : base;
+        ? {
+            ...base,
+            maritalStatus: c.maritalStatus,
+            mobile: c.mobile,
+            email: c.email,
+          }
+        : base; // under 18: no marital status, mobile or email
     });
   }
   return payload;

@@ -471,15 +471,21 @@ h2:focus {
   }
 }
 
-/* Desktop: children become a table-style grid with a visible header row */
 @media (min-width: 900px) {
   .shell {
     max-width: 1040px;
   }
+}
+
+/* Desktop: children become a table-style grid with a visible header row */
+@media (min-width: 1100px) {
   .child-head,
   .child-row {
     display: grid;
-    grid-template-columns: 1.5fr 0.8fr 1fr 1.2fr 1.6fr;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 0.7fr) minmax(
+        0,
+        0.9fr
+      ) minmax(0, 1fr) minmax(0, 1.1fr) minmax(0, 1.5fr);
     gap: 12px;
     align-items: start;
   }

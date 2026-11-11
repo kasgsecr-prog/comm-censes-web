@@ -4,6 +4,9 @@ import { Field } from "./Field.jsx";
 import { GenderSelect } from "./MainStep.jsx";
 import StepHeading from "./StepHeading.jsx";
 import { isAdultYear } from "../form.js";
+import { MARITAL_STATUSES } from "../shared/schema.js";
+
+const cap = (s) => s.charAt(0) + s.slice(1).toLowerCase();
 
 function ChildRow({ index }) {
   const { control, setValue, clearErrors } = useFormContext();
@@ -11,12 +14,13 @@ function ChildRow({ index }) {
   const yob = useWatch({ control, name: `${p}.yearOfBirth` });
   const adult = isAdultYear(yob);
 
-  // Under 18 (or year not yet valid): contact fields are disabled and emptied (stored as NULL by the API).
+  // Under 18 (or year not yet valid): these fields are disabled and emptied (stored as NULL by the API).
   useEffect(() => {
     if (!adult) {
+      setValue(`${p}.maritalStatus`, "");
       setValue(`${p}.mobile`, "");
       setValue(`${p}.email`, "");
-      clearErrors([`${p}.mobile`, `${p}.email`]);
+      clearErrors([`${p}.maritalStatus`, `${p}.mobile`, `${p}.email`]);
     }
   }, [adult, p, setValue, clearErrors]);
 
@@ -44,6 +48,20 @@ function ChildRow({ index }) {
         maxLength={4}
       />
       <GenderSelect name={`${p}.gender`} />
+      <Field
+        as="select"
+        name={`${p}.maritalStatus`}
+        label="Marital status"
+        disabled={!adult}
+        hint={hint}
+      >
+        <option value="">Select…</option>
+        {MARITAL_STATUSES.map((m) => (
+          <option key={m} value={m}>
+            {cap(m)}
+          </option>
+        ))}
+      </Field>
       <Field
         name={`${p}.mobile`}
         label="Mobile"
@@ -78,14 +96,15 @@ export default function ChildrenStep() {
     <>
       <StepHeading>Children ({fields.length})</StepHeading>
       <p className="lead">
-        Mobile and email are only needed for children aged 18 or over (current
-        year minus year of birth).
+        Marital status, mobile and email are only needed for children aged 18 or
+        over (current year minus year of birth).
       </p>
       <div className="children">
         <div className="child-head" aria-hidden="true">
           <span>Name</span>
           <span>Year of birth</span>
           <span>Gender</span>
+          <span>Marital status</span>
           <span>Mobile</span>
           <span>Email</span>
         </div>
