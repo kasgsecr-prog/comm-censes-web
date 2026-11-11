@@ -9,13 +9,16 @@ export const CONTACT_EMAIL = "kasg.secr@gmail.com";
 
 export const PDPA_NOTICE =
   "This census is conducted in compliance with the Singapore Personal Data Protection Act (PDPA). " +
-  "All data collected is kept strictly within the association. Only the name, address and contact details " +
-  "of the main member will be shared with KA members, and only for wedding invitation purposes. " +
-  "No other data will be shared or used for any other purpose.";
+  "All personal data collected will be kept confidential and used only for legitimate association purposes. " +
+  "Only the full name, family name, address, and contact details of the main family member " +
+  "may be shared with KA members solely for wedding invitations and other family occasion-related communications.";
 
-export const CONSENT_ACCURACY = "I confirm that the data provided is accurate.";
+export const CONSENT_ACCURACY =
+  "I confirm that the information provided is accurate and correct.";
 export const CONSENT_SHARE =
-  "I consent to share the main member's name, address and contact details with KA members for wedding invitation purposes only.";
+  "I consent to the collection and use of my personal data for Association purposes and to the sharing of " +
+  "the main family member's name, address, and contact details with KA members solely for wedding invitations " +
+  "and family occasion-related communications, in accordance with the PDPA.";
 
 export const RETENTION_NOTE =
-  "Your response is kept for 5 years and then reviewed by the association for deletion.";
+  "Personal data will be retained and reviewed periodically. Members are encouraged to update the Association whenever their details change.";

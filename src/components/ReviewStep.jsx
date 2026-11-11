@@ -134,8 +134,8 @@ export default function ReviewStep({ onEdit }) {
         <Check name="consent.shareConsent">{CONSENT_SHARE}</Check>
         <p className="hint">
           You can withdraw consent at any time by emailing{" "}
-          <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a> with your
-          reference number.
+          <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a> with your full
+          name and family name.
         </p>
       </fieldset>
     </>

@@ -11,13 +11,14 @@ export default function Landing({ onStart }) {
       </section>
       <ul className="plain">
         <li>
-          It takes about 5 minutes. Please have your family's details ready.
+          It takes about 3 minutes to complete this form with your basic family
+          details..
         </li>
         <li>{RETENTION_NOTE}</li>
         <li>
-          To ask for access to, correction of, or withdrawal of your data, email{" "}
-          <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a> with your
-          reference number.
+          To update your data, email{" "}
+          <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a> with your new
+          details.
         </li>
       </ul>
       <div className="actions single">

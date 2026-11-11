@@ -226,7 +226,7 @@ export default function App() {
 
       <footer className="shell foot">
         <p>
-          {RETENTION_NOTE} Access or withdrawal requests:{" "}
+          {RETENTION_NOTE} Contact:{" "}
           <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
         </p>
       </footer>
