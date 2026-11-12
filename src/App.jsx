@@ -152,7 +152,16 @@ export default function App() {
       </a>
       <header className="top">
         <div className="shell">
-          <p className="brand">KA Community Census</p>
+          <p className="brand">
+            <img
+              className="brand-logo"
+              src="/KALOGO72.png"
+              alt=""
+              width="24"
+              height="24"
+            />
+            KA Community Census
+          </p>
         </div>
       </header>
 

@@ -76,6 +76,15 @@ h3 {
 .brand {
   margin: 0;
   font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.brand-logo {
+  display: block;
+  flex: none;
+  height: 24px;
+  width: auto;
 }
 .foot {
   color: var(--muted);
@@ -327,6 +336,103 @@ h2:focus {
   margin-bottom: 0;
 }
 
+/* Gender: segmented radio buttons (real radios, visually replaced by the span) */
+.seg-field {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+.seg-legend {
+  display: block;
+  padding: 0;
+  margin: 0 0 4px;
+  font-weight: 600;
+}
+.seg {
+  display: flex;
+}
+.seg-opt {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  margin: 0;
+  cursor: pointer;
+}
+.seg-opt + .seg-opt {
+  margin-left: -2px;
+} /* shared border between the two buttons */
+.seg-opt input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 2; /* covers the button so the whole area is the tap target */
+}
+.seg-opt span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 48px;
+  padding: 0 12px;
+  font-weight: 600;
+  color: var(--ink);
+  background: #fff;
+  border: 2px solid var(--line);
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.seg-opt:first-child span {
+  border-radius: var(--r) 0 0 var(--r);
+}
+.seg-opt:last-child span {
+  border-radius: 0 var(--r) var(--r) 0;
+}
+.seg-opt:hover input:not(:checked) + span {
+  background: #eef2ff;
+}
+.seg-opt input:checked + span {
+  position: relative;
+  z-index: 1;
+  background: var(--brand);
+  border-color: var(--brand);
+  color: #fff;
+}
+.seg-opt input[aria-invalid="true"] + span {
+  border-color: var(--err);
+}
+.seg-opt input[aria-invalid="true"]:checked + span {
+  border-color: var(--brand);
+}
+/* Focus ring on the visible span. Two separate rules so old browsers without :focus-visible still get a ring. */
+.seg-opt input:focus + span {
+  outline: 3px solid var(--ink);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 6px var(--focus);
+  z-index: 3;
+}
+.seg-opt input:focus:not(:focus-visible) + span {
+  outline: none;
+  box-shadow: none;
+}
+.seg-opt input:focus {
+  outline: none;
+  box-shadow: none;
+} /* the invisible input itself shows nothing */
+@media (forced-colors: active) {
+  .seg-opt input:checked + span {
+    background: Highlight;
+    color: HighlightText;
+    border-color: Highlight;
+  }
+}
+
 /* Buttons */
 .actions {
   display: flex;
@@ -482,10 +588,9 @@ h2:focus {
   .child-head,
   .child-row {
     display: grid;
-    grid-template-columns: minmax(0, 1.4fr) minmax(0, 0.7fr) minmax(
-        0,
-        0.9fr
-      ) minmax(0, 1fr) minmax(0, 1.1fr) minmax(0, 1.5fr);
+    grid-template-columns:
+      minmax(0, 1.3fr) minmax(0, 0.65fr) minmax(0, 1.1fr)
+      minmax(0, 1fr) minmax(0, 1.1fr) minmax(0, 1.4fr);
     gap: 12px;
     align-items: start;
   }
@@ -497,7 +602,8 @@ h2:focus {
     padding: 12px 16px;
   }
   .child-row .child-title,
-  .child-row .field > label {
+  .child-row .field > label,
+  .child-row .seg-legend {
     position: absolute;
     width: 1px;
     height: 1px;
@@ -509,6 +615,10 @@ h2:focus {
   .child-row .hint {
     display: none;
   } /* still read via aria-describedby */
+  .child-row .seg-opt span {
+    padding: 0 4px;
+    font-size: 15px;
+  } /* compact buttons in the table cell */
 }
 
 @media (prefers-reduced-motion: reduce) {

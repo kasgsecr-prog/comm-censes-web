@@ -1,19 +1,55 @@
-import { Field } from "./Field.jsx";
+import { useId } from "react";
+import { useFormContext } from "react-hook-form";
+import { Field, getError } from "./Field.jsx";
 import StepHeading from "./StepHeading.jsx";
 import { GENDERS, MARITAL_STATUSES } from "../shared/schema.js";
 
 const cap = (s) => s.charAt(0) + s.slice(1).toLowerCase();
 
-export function GenderSelect({ name }) {
+/**
+ * Gender as segmented radio buttons (used for main member, spouse and each child).
+ * Real radio inputs: keyboard arrow keys, screen readers and autofill all work natively.
+ * Layout (full-size card vs compact table cell) is handled in CSS only.
+ */
+export function GenderSelect({ name, label = "Gender" }) {
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext();
+  const id = useId();
+  const err = getError(errors, name);
+  const errId = err ? `${id}-err` : undefined;
+
   return (
-    <Field as="select" name={name} label="Gender">
-      <option value="">Select…</option>
-      {GENDERS.map((g) => (
-        <option key={g} value={g}>
-          {cap(g)}
-        </option>
-      ))}
-    </Field>
+    <fieldset className="field seg-field">
+      <legend className="seg-legend">
+        {label}
+        <span className="req" aria-hidden="true">
+          {" "}
+          *
+        </span>
+      </legend>
+      <div className="seg">
+        {GENDERS.map((g) => (
+          <label key={g} className="seg-opt">
+            <input
+              type="radio"
+              value={g}
+              aria-required="true"
+              aria-invalid={err ? "true" : "false"}
+              aria-describedby={errId}
+              {...register(name)}
+            />
+            <span>{cap(g)}</span>
+          </label>
+        ))}
+      </div>
+      {err ? (
+        <p id={errId} className="error" role="alert">
+          {err.message}
+        </p>
+      ) : null}
+    </fieldset>
   );
 }
 
