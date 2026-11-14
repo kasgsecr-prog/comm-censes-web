@@ -12,8 +12,10 @@ export default function Success({ reference }) {
       </p>
       <p>
         We also strongly encourage you to share this KA Community Census request
-        with other KNR families living in Singapore so that we can maintain a
-        comprehensive and up-to-date community database.
+        with your married children and other KNR families living in Singapore.
+        Your support helps us maintain a comprehensive, accurate, and up-to-date
+        community database while strengthening connections within our growing
+        community.
       </p>
       <p>
         Your participation and support are greatly appreciated as we work
