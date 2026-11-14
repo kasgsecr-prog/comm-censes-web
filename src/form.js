@@ -4,6 +4,7 @@ import {
   mainSchema,
   addressSchema,
   spouseSchema,
+  divorceSchema,
   childSchema,
   consentSchema,
   isAdult,
@@ -40,6 +41,7 @@ export const defaultValues = {
     nativePlace: "",
     numberOfChildren: "",
   },
+  divorce: { hasChildrenInCustody: null, numberOfChildren: "" },
   children: [],
   consent: {
     accuracyConfirmed: false,
@@ -52,6 +54,7 @@ export const defaultValues = {
 export const STEP_SCHEMAS = {
   main: z.object({ main: mainSchema, address: addressSchema }),
   spouse: z.object({ spouse: spouseSchema }),
+  divorce: z.object({ divorce: divorceSchema }),
   children: z.object({ children: z.array(childSchema) }),
   review: z.object({ consent: consentSchema }),
 };
@@ -73,6 +76,18 @@ export function extraErrors(step, v) {
       message: "Native place is required when spouse is not from Koothanallur",
     });
   }
+
+  if (
+    step === "divorce" &&
+    v.divorce.hasChildrenInCustody === true &&
+    !(Number(v.divorce.numberOfChildren) >= 1)
+  ) {
+    out.push({
+      name: "divorce.numberOfChildren",
+      message: "Select the number of children under your custody",
+    });
+  }
+
   if (step === "children") {
     v.children.forEach((c, i) => {
       if (!isAdultYear(c.yearOfBirth)) return;
@@ -111,7 +126,8 @@ const ADULT_KEYS = [
 /** Builds the exact JSON the API expects. Hidden/irrelevant fields are omitted. */
 export function buildPayload(v, clientToken) {
   const married = v.main.maritalStatus === "MARRIED";
-  const n = Number(v.spouse.numberOfChildren) || 0;
+  const divorced = v.main.maritalStatus === "DIVORCED";
+  const n = childCountOf(v);
 
   const payload = {
     clientToken,
@@ -134,6 +150,16 @@ export function buildPayload(v, clientToken) {
       numberOfChildren: n,
       ...(s.isFromKoothanallur === false ? { nativePlace: s.nativePlace } : {}),
     };
+  }
+
+  if (divorced) {
+    payload.divorce = {
+      hasChildrenInCustody: v.divorce.hasChildrenInCustody,
+      numberOfChildren: n,
+    };
+  }
+
+  if (married || divorced) {
     payload.children = v.children.slice(0, n).map((c) => {
       const base = pick(c, ["fullName", "yearOfBirth", "gender"]);
       return isAdultYear(c.yearOfBirth)
@@ -154,6 +180,16 @@ export function stepForPath(path) {
   const root = String(path).split(".")[0];
   if (root === "main" || root === "address") return "main";
   if (root === "spouse") return "spouse";
+  if (root === "divorce") return "divorce";
   if (root === "children") return "children";
   return "review";
+}
+
+/** Number of children the household form should list, based on marital status. */
+export function childCountOf(v) {
+  const s = v.main.maritalStatus;
+  if (s === "MARRIED") return Number(v.spouse.numberOfChildren) || 0;
+  if (s === "DIVORCED" && v.divorce.hasChildrenInCustody === true)
+    return Number(v.divorce.numberOfChildren) || 0;
+  return 0;
 }

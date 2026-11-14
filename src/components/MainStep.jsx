@@ -151,8 +151,8 @@ export default function MainStep() {
         <div className="grid">
           <Field
             name="address.block"
-            label="Block"
-            hint="e.g. 123A"
+            label="Block / House no."
+            hint="e.g. 123A (HDB block) or 12 (house number)"
             autoComplete="off"
             maxLength={10}
             autoCapitalize="characters"
@@ -160,7 +160,7 @@ export default function MainStep() {
           <Field
             name="address.unitNo"
             label="Unit number"
-            hint="e.g. #05-123"
+            hint="e.g. #05-123. Type 0 if not applicable"
             autoComplete="address-line2"
             maxLength={15}
           />

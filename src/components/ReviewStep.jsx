@@ -3,6 +3,7 @@ import { useFormContext } from "react-hook-form";
 import { getError } from "./Field.jsx";
 import StepHeading from "./StepHeading.jsx";
 import { CONSENT_ACCURACY, CONSENT_SHARE, CONTACT_EMAIL } from "../config.js";
+import { childCountOf } from "../form.js";
 
 const cap = (s) => (s ? s.charAt(0) + s.slice(1).toLowerCase() : "");
 const Row = ({ k, v }) => (
@@ -73,7 +74,8 @@ export default function ReviewStep({ onEdit }) {
   const { getValues } = useFormContext();
   const v = getValues();
   const married = v.main.maritalStatus === "MARRIED";
-  const kids = married ? Number(v.spouse.numberOfChildren) || 0 : 0;
+  const divorced = v.main.maritalStatus === "DIVORCED";
+  const kids = childCountOf(v);
 
   return (
     <>
@@ -91,7 +93,13 @@ export default function ReviewStep({ onEdit }) {
         <Row k="Marital status" v={cap(v.main.maritalStatus)} />
         <Row
           k="Address"
-          v={`Blk ${v.address.block}, ${v.address.street}, ${v.address.unitNo}, Singapore ${v.address.postalCode}`}
+          v={[
+            `${v.address.block} ${v.address.street}`,
+            v.address.unitNo.trim() === "0" ? "" : v.address.unitNo,
+            `Singapore ${v.address.postalCode}`,
+          ]
+            .filter(Boolean)
+            .join(", ")}
         />
       </Section>
 
@@ -105,6 +113,19 @@ export default function ReviewStep({ onEdit }) {
           {v.spouse.isFromKoothanallur === false ? (
             <Row k="Native place" v={v.spouse.nativePlace} />
           ) : null}
+          <Row k="Number of children" v={String(kids)} />
+        </Section>
+      ) : null}
+
+      {divorced ? (
+        <Section
+          title="Children in your custody"
+          onEdit={() => onEdit("divorce")}
+        >
+          <Row
+            k="Children under your custody"
+            v={v.divorce.hasChildrenInCustody ? "Yes" : "No"}
+          />
           <Row k="Number of children" v={String(kids)} />
         </Section>
       ) : null}

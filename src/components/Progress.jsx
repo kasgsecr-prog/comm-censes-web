@@ -1,6 +1,7 @@
 export const STEP_LABELS = {
   main: "Your details",
   spouse: "Spouse",
+  divorce: "Custody",
   children: "Children",
   review: "Review & submit",
 };

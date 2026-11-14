@@ -5,18 +5,21 @@ import Landing from "./components/Landing.jsx";
 import Progress from "./components/Progress.jsx";
 import MainStep from "./components/MainStep.jsx";
 import SpouseStep from "./components/SpouseStep.jsx";
+import DivorceStep from "./components/DivorceStep.jsx";
 import ChildrenStep from "./components/ChildrenStep.jsx";
 import ReviewStep from "./components/ReviewStep.jsx";
 import Success from "./components/Success.jsx";
 import { ApiError, newToken, submitCensus } from "./api.js";
 import {
   buildPayload,
+  childCountOf,
   defaultValues,
   emptyChild,
   extraErrors,
   STEP_SCHEMAS,
   stepForPath,
 } from "./form.js";
+
 import { CONTACT_EMAIL, RETENTION_NOTE } from "./config.js";
 
 export default function App() {
@@ -42,15 +45,30 @@ export default function App() {
     control: methods.control,
     name: "main.maritalStatus",
   });
-  const kids =
+  const spouseKids =
     Number(
       useWatch({ control: methods.control, name: "spouse.numberOfChildren" }),
     ) || 0;
+  const custody = useWatch({
+    control: methods.control,
+    name: "divorce.hasChildrenInCustody",
+  });
+  const custodyKids =
+    Number(
+      useWatch({ control: methods.control, name: "divorce.numberOfChildren" }),
+    ) || 0;
   const married = marital === "MARRIED";
+  const divorced = marital === "DIVORCED";
+  const kids = married
+    ? spouseKids
+    : divorced && custody === true
+      ? custodyKids
+      : 0;
   const steps = [
     "main",
     ...(married ? ["spouse"] : []),
-    ...(married && kids >= 1 ? ["children"] : []),
+    ...(divorced ? ["divorce"] : []),
+    ...(kids >= 1 ? ["children"] : []),
     "review",
   ];
   const idx = steps.indexOf(step);
@@ -81,7 +99,7 @@ export default function App() {
 
   /** Make the children array exactly as long as the number entered, keeping existing rows. */
   function syncChildren() {
-    const n = Number(methods.getValues("spouse.numberOfChildren")) || 0;
+    const n = childCountOf(methods.getValues());
     const cur = methods.getValues("children") || [];
     methods.setValue(
       "children",
@@ -92,7 +110,7 @@ export default function App() {
   async function next() {
     setBanner("");
     if (!(await validateStep())) return;
-    if (step === "spouse") syncChildren();
+    if (step === "spouse" || step === "divorce") syncChildren();
     setStep(steps[idx + 1]);
   }
 
@@ -141,6 +159,7 @@ export default function App() {
   const stepEl = {
     main: <MainStep />,
     spouse: <SpouseStep />,
+    divorce: <DivorceStep />,
     children: <ChildrenStep />,
     review: <ReviewStep onEdit={setStep} />,
   }[step];
